@@ -1,5 +1,7 @@
 # About
-Ink2Pixel extracts handwritten text from an image and returns a digitalised version of the text. App uses [**microsoft/trocr-large-handwritten**](https://huggingface.co/microsoft/trocr-large-handwritten) model to extract text from the image line by line. OpenCV is used to split the paragraphs into lines.
+Ink2Pixel seamlessly converts handwritten text from an image into a digital format. The app utilizes the [**microsoft/trocr-large-handwritten**](https://huggingface.co/microsoft/trocr-large-handwritten) model for precise text extraction, processing each line individually. OpenCV is employed to segment paragraphs into lines, ensuring accurate and efficient text conversion.
+
+The app also corrects any spelling and grammatical errors in the input text.
 
 #### Input image:
 <img width="809" alt="Demo2" src="https://github.com/user-attachments/assets/4fb9c020-d97e-4f6f-9579-76e16961d88d">
@@ -23,3 +25,12 @@ Ink2Pixel extracts handwritten text from an image and returns a digitalised vers
    ```bash
    python app.py
    ```
+The app features a user-friendly Gradio interface, allowing you to effortlessly upload your source image either by capturing it with a camera or by uploading it directly.
+
+## Demo
+You can access the live demo of the app on [Hugging Face](https://huggingface.co/spaces/BilalHasan/Ink2Pixel).
+
+## Note:
+1. For optimal results, please use an image with a white background and text in black ink.
+2. Ensure the lines do not overlap. There should be sufficient space between each line, as illustrated in the example above.
+3. The model, with its 333 million parameters, requires some time to process. I appreciate your patience.
