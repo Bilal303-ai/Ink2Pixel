@@ -107,12 +107,12 @@ def predict(input_path):
     lines = split_image_into_lines(bin_image)
     improved_text = get_improved_result(lines)
     out_image = put_text(improved_text, font, font_scale, color, thickness, max_width, out_image_width, top_margin)
-    return out_image
+    return out_image, improved_text
 
 gradio_app = gr.Interface(
     predict,
-    inputs=gr.Image(label= ' ', sources=['upload', 'webcam'], type='filepath'),
-    outputs=[gr.Image(label= ' ')],
+    inputs=gr.Image(label= 'Input image', sources=['upload', 'webcam'], type='filepath'),
+    outputs=[gr.Image(label= 'Output image'), gr.Textbox(label='Output text')],
     title="Extract Handwritten Text",
 )
 
