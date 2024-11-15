@@ -2,7 +2,6 @@ import cv2 as cv
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
-from openai import OpenAI
 import gradio as gr
 
 processor = TrOCRProcessor.from_pretrained('microsoft/trocr-large-handwritten')
@@ -16,7 +15,6 @@ def preprocess_image(image):
   bin_image = cv.copyMakeBorder(bin_image, int(0.10 * image.shape[0]), int(0.05 * image.shape[0]), int(0.05 * image.shape[1]), int(0.10 * image.shape[1]), cv.BORDER_CONSTANT, value=(255, 255, 255))
   return bin_image
 
-#bin_image = preprocess_image(image)
 
 def split_image_into_lines(image):
   lines = []
@@ -52,7 +50,6 @@ def split_image_into_lines(image):
 
   return lines
 
-#lines = split_image_into_lines(bin_image)
 
 
 def generate_text(line):
@@ -64,24 +61,7 @@ def generate_text(line):
 
 def get_improved_result(lines):
     with ProcessPoolExecutor() as executor:
-        results = ' '.join(executor.map(generate_text, lines))
-        #improve results with llm
-    
-        client = OpenAI()
-    
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "user",
-    
-                    "content": f"I have a string that was extracted from an image of handwritten text. The extraction process introduced minor grammatical, spelling, and punctuation errors. Please carefully review the text below and make any necessary corrections to improve readability and accuracy while preserving the original meaning. Do not change the content or style beyond necessary corrections. Return the corrected text only without adding any headings, explanations, or extra formatting. Text: {results}"
-                }
-            ]
-        )
-    
-        improved_text = completion.choices[0].message.content
-
+        improved_text = ' '.join(executor.map(generate_text, lines))
     return improved_text
 
 
@@ -124,19 +104,15 @@ top_margin = 100
 def predict(input_path):
     image = cv.imread(input_path)
     bin_image = preprocess_image(image)
-    print("Preprocessing Complete!")
     lines = split_image_into_lines(bin_image)
-    print("Splitting complete!")
     improved_text = get_improved_result(lines)
-    print("Improvement done!")
     out_image = put_text(improved_text, font, font_scale, color, thickness, max_width, out_image_width, top_margin)
-    print("Out image generated!")
     return out_image
 
 gradio_app = gr.Interface(
     predict,
-    inputs=gr.Image(label= '', sources=['upload', 'webcam'], type='filepath'),
-    outputs=[gr.Image(label= '')],
+    inputs=gr.Image(label= ' ', sources=['upload', 'webcam'], type='filepath'),
+    outputs=[gr.Image(label= ' ')],
     title="Extract Handwritten Text",
 )
 
